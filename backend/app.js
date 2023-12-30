@@ -3,12 +3,14 @@ const ErrorHandler = require("./middleware/error");
 const app = express();
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
-const cors = require("cors");
+//const cors = require("cors");
 
+/*
 app.use(cors({
-  origin: ['https://eshop-tutorial-pyri.vercel.app',],
+  origin: [],
   credentials: true
 }));
+*/
 
 app.use(express.json());
 app.use(cookieParser());
