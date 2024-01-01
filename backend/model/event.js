@@ -16,15 +16,15 @@ const eventSchema = new mongoose.Schema({
     start_Date: {
         type: Date,
         required: true,
-      },
-      Finish_Date: {
+    },
+    Finish_Date: {
         type: Date,
         required: true,
-      },
-      status: {
+    },
+    status: {
         type: String,
         default: "Running",
-      },
+    },
     tags:{
         type: String,
     },
