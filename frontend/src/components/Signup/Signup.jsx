@@ -2,41 +2,41 @@ import { React, useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import styles from "../../styles/styles";
 import { Link } from "react-router-dom";
-import { RxAvatar } from "react-icons/rx";
+// import { RxAvatar } from "react-icons/rx";
 import axios from "axios";
 import { server } from "../../server";
 import { toast } from "react-toastify";
 
-const Singup = () => {
+const Signup = () => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [visible, setVisible] = useState(false);
-  const [avatar, setAvatar] = useState(null);
+  // const [avatar, setAvatar] = useState(null);
 
-  const handleFileInputChange = (e) => {
-    const reader = new FileReader();
+  // const handleFileInputChange = (e) => {
+  //   const reader = new FileReader();
 
-    reader.onload = () => {
-      if (reader.readyState === 2) {
-        setAvatar(reader.result);
-      }
-    };
+  //   reader.onload = () => {
+  //     if (reader.readyState === 2) {
+  //       setAvatar(reader.result);
+  //     }
+  //   };
 
-    reader.readAsDataURL(e.target.files[0]);
-  };
+  //   reader.readAsDataURL(e.target.files[0]);
+  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     axios
-      .post(`${server}/user/create-user`, { name, email, password, avatar })
+      .post(`${server}/user/create-user`, { name, email, password}) // Removed avatar
       .then((res) => {
         toast.success(res.data.message);
         setName("");
         setEmail("");
         setPassword("");
-        setAvatar();
+        // setAvatar();
       })
       .catch((error) => {
         toast.error(error.response.data.message);
@@ -125,7 +125,6 @@ const Singup = () => {
                 )}
               </div>
             </div>
-
             <div>
               <label
                 htmlFor="avatar"
@@ -158,8 +157,7 @@ const Singup = () => {
                   />
                 </label>
               </div>
-            </div>
-
+            </div> 
             <div>
               <button
                 type="submit"
@@ -181,4 +179,4 @@ const Singup = () => {
   );
 };
 
-export default Singup;
+export default Signup;
