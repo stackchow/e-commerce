@@ -1,13 +1,12 @@
 const app = require("./app");
-const connectDatabase = require("./db/Database");
+const connectDB = require("./db/db");
 const cloudinary = require("cloudinary");
 
 const PORT = process.env.PORT;
 
 // Handling uncaught Exception
 process.on("uncaughtException", (err) => {
-  console.log(`Error: ${err.message}`);
-  console.log(`shutting down the server for handling uncaught exception`);
+  console.log(`Error: ${err.message}\n`, 'Shutting down the server for handling uncaught exception');
 });
 
 // config
@@ -18,7 +17,7 @@ if (process.env.NODE_ENV !== "PRODUCTION") {
 }
 
 // connect db
-connectDatabase();
+connectDB();
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
@@ -29,9 +28,7 @@ cloudinary.config({
 
 // create server
 const server = app.listen(PORT, () => {
-  console.log(
-    `Server is running on http://localhost:${PORT}`
-  );
+  console.log('Server is running on PORT', PORT);
 });
 
 // unhandled promise rejection
