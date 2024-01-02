@@ -12,7 +12,7 @@ The frontend would be hosted on http://localhost:3000
 
 
 To run backend server
-Cd backend/
+cd backend/
 
 Note: Make sure you have the .env(./config) files configured
 
@@ -24,3 +24,14 @@ npm run start (To start the backend server) or
     npm run dev (This uses nodemon so you don't need to restart server when you make changes to the backend)
 
 The Backend server would be running on PORT 8000
+
+
+To run socket server
+cd socket/ 
+
+npm install
+
+npm run start
+
+
+With .env files properly setup, the Web app should work efficiently,  kindly open an issue if there's any.
