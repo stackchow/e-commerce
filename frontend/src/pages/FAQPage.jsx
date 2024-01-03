@@ -172,7 +172,7 @@ const Faq = () => {
               <p className="text-base text-gray-500">
                 You can contact our customer support team by emailing us at
                 support@myecommercestore.com, or by calling us at (555) 123-4567
-                between the hours of 9am and 5pm EST, Monday through Friday.
+                between the hours of 9am and 5pm WAT, Monday through Friday.
               </p>
             </div>
           )}
@@ -269,7 +269,7 @@ const Faq = () => {
           {activeTab === 6 && (
             <div className="mt-4">
               <p className="text-base text-gray-500">
-                Currently, we only offer shipping within the United States.
+                Currently, we only offer shipping within Nigeria.
               </p>
             </div>
           )}
@@ -316,7 +316,7 @@ const Faq = () => {
           {activeTab === 7 && (
             <div className="mt-4">
               <p className="text-base text-gray-500">
-                We accept visa,mastercard,paypal payment method also we have
+                We accept visa, mastercard method also we have
                 cash on delivery system.
               </p>
             </div>

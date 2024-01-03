@@ -1,16 +1,12 @@
-const express = require("express");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const Shop = require("../model/shop");
 const Event = require("../model/event");
 const ErrorHandler = require("../utils/ErrorHandler");
-const { isSeller, isAdmin, isAuthenticated } = require("../middleware/auth");
-const router = express.Router();
 const cloudinary = require("cloudinary");
 
 // create event
-router.post(
-  "/create-event",
-  catchAsyncErrors(async (req, res, next) => {
+const createEvent = catchAsyncErrors(
+  async (req, res, next) => {
     try {
       const shopId = req.body.shopId;
       const shop = await Shop.findById(shopId);
@@ -52,11 +48,11 @@ router.post(
     } catch (error) {
       return next(new ErrorHandler(error, 400));
     }
-  })
+  }
 );
 
 // get all events
-router.get("/get-all-events", async (req, res, next) => {
+const getAllEvents = async (req, res, next) => {
   try {
     const events = await Event.find();
     res.status(201).json({
@@ -66,12 +62,11 @@ router.get("/get-all-events", async (req, res, next) => {
   } catch (error) {
     return next(new ErrorHandler(error, 400));
   }
-});
+};
 
 // get all events of a shop
-router.get(
-  "/get-all-events/:id",
-  catchAsyncErrors(async (req, res, next) => {
+const getAllEventsOfShop = catchAsyncErrors(
+  async (req, res, next) => {
     try {
       const events = await Event.find({ shopId: req.params.id });
 
@@ -82,13 +77,12 @@ router.get(
     } catch (error) {
       return next(new ErrorHandler(error, 400));
     }
-  })
+  }
 );
 
 // delete event of a shop
-router.delete(
-  "/delete-shop-event/:id",
-  catchAsyncErrors(async (req, res, next) => {
+const delEventOfShop = catchAsyncErrors(
+  async (req, res, next) => {
     try {
       const event = await Event.findById(req.params.id);
 
@@ -111,15 +105,12 @@ router.delete(
     } catch (error) {
       return next(new ErrorHandler(error, 400));
     }
-  })
+  }
 );
 
 // all events --- for admin
-router.get(
-  "/admin-all-events",
-  isAuthenticated,
-  isAdmin("Admin"),
-  catchAsyncErrors(async (req, res, next) => {
+const adminAllEVents = catchAsyncErrors(
+  async (req, res, next) => {
     try {
       const events = await Event.find().sort({
         createdAt: -1,
@@ -131,7 +122,13 @@ router.get(
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
     }
-  })
+  }
 );
 
-module.exports = router;
+module.exports = {
+  createEvent,
+  getAllEvents,
+  getAllEventsOfShop,
+  delEventOfShop,
+  adminAllEVents
+};

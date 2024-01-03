@@ -1,13 +1,8 @@
 const Conversation = require("../model/conversation");
 const ErrorHandler = require("../utils/ErrorHandler");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
-const express = require("express");
-const { isSeller, isAuthenticated } = require("../middleware/auth");
-const router = express.Router();
 
 // create a new conversation
-
-
 const createNewConvo = catchAsyncErrors(
   async (req, res, next) => {
     try {
@@ -36,17 +31,11 @@ const createNewConvo = catchAsyncErrors(
       return next(new ErrorHandler(error.response.message), 500);
     }
   }
-)
-
-router.post(
-  "/create-new-conversation",
 );
 
 // get seller conversations
-router.get(
-  "/get-all-conversation-seller/:id",
-  isSeller,
-  catchAsyncErrors(async (req, res, next) => {
+const getAllConvoSellerById = catchAsyncErrors(
+  async (req, res, next) => {
     try {
       const conversations = await Conversation.find({
         members: {
@@ -61,15 +50,12 @@ router.get(
     } catch (error) {
       return next(new ErrorHandler(error), 500);
     }
-  })
+  }
 );
 
-
 // get user conversations
-router.get(
-  "/get-all-conversation-user/:id",
-  isAuthenticated,
-  catchAsyncErrors(async (req, res, next) => {
+const getAllConvoUserById = catchAsyncErrors(
+  async (req, res, next) => {
     try {
       const conversations = await Conversation.find({
         members: {
@@ -84,13 +70,12 @@ router.get(
     } catch (error) {
       return next(new ErrorHandler(error), 500);
     }
-  })
+  }
 );
 
 // update the last message
-router.put(
-  "/update-last-message/:id",
-  catchAsyncErrors(async (req, res, next) => {
+const updateLastMesById = catchAsyncErrors(
+  async (req, res, next) => {
     try {
       const { lastMessage, lastMessageId } = req.body;
 
@@ -106,7 +91,12 @@ router.put(
     } catch (error) {
       return next(new ErrorHandler(error), 500);
     }
-  })
+  }
 );
 
-module.exports = router;
+module.exports = {
+  createNewConvo,
+  getAllConvoSellerById,
+  getAllConvoUserById,
+  updateLastMesById
+};
