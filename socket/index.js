@@ -10,6 +10,8 @@ require("dotenv").config({
   path: "./.env",
 });
 
+const PORT = process.env.PORT  || 4000;
+
 app.use(cors());
 app.use(express.json());
 
@@ -108,6 +110,6 @@ io.on("connection", (socket) => {
   });
 });
 
-server.listen(process.env.PORT || 4000, () => {
-  console.log(`server is running on port ${process.env.PORT || 4000}`);
+server.listen(PORT, () => {
+  console.log(`server is running on port ${PORT}`);
 });
