@@ -9,56 +9,41 @@ const sendToken = require("../utils/jwtToken");
 // create user
 const createUser = async (req, res, next) => {
   try {
-    const { name, email, password } = req.body; // Test
-    // const { name, email, password, avatar } = req.body;
+    const { name, email, password, avatar } = req.body;
     const userEmail = await User.findOne({ email });
 
     if (userEmail) {
       return next(new ErrorHandler("User already exists", 400));
     }
 
-    // const myCloud = await cloudinary.v2.uploader.upload(avatar, {
-    //   folder: "avatars",
-    // });
+    const myCloud = await cloudinary.v2.uploader.upload(avatar, {
+      folder: "avatars",
+    });
 
-    // const user = {
-    //   name: name,
-    //   email: email,
-    //   password: password,
-    //   // avatar: {
-    //   //   public_id: myCloud.public_id,
-    //   //   url: myCloud.secure_url,
-    //   // },
-    // };
+    const user = {
+      name: name,
+      email: email,
+      password: password,
+      avatar: {
+        public_id: myCloud.public_id,
+        url: myCloud.secure_url,
+      },
+    };
 
-    // const activationToken = createActivationToken(user);
+    const activationToken = createActivationToken(user);
 
-    // const activationUrl = `https://localhost:3000/activation/${activationToken}`;
+    const activationUrl = `https://localhost:3000/activation/${activationToken}`;
 
     try {
-      // await sendMail({
-      //   email: user.email,
-      //   subject: "Activate your account",
-      //   message: `Hello ${user.name}, please click on the link to activate your account: ${activationUrl}`,
-      // });
-
-      let user = await User.findOne({ email });
-
-      if (user) {
-        return next(new ErrorHandler("User already exists", 400));
-      }
-      user = await User.create({
-        name,
-        email,
-        // avatar,
-        password,
+      await sendMail({
+        email: user.email,
+        subject: "Activate your account",
+        message: `Hello ${user.name}, please click on the link to activate your account: ${activationUrl}`,
       });
 
       res.status(201).json({
         success: true,
-        // message: `please check your email:- ${user.email} to activate your account!`,
-        message: 'You are registered!',
-        user,
+        message: `please check your email:- ${user.email} to activate your account!`,
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
@@ -88,8 +73,7 @@ const activateUser = catchAsyncErrors(async (req, res, next) => {
     if (!newUser) {
       return next(new ErrorHandler("Invalid token", 400));
     }
-    // const { name, email, password, avatar } = newUser;
-    const { name, email, password } = newUser; // test
+    const { name, email, password, avatar } = newUser;
 
     let user = await User.findOne({ email });
 
@@ -99,7 +83,7 @@ const activateUser = catchAsyncErrors(async (req, res, next) => {
     user = await User.create({
       name,
       email,
-      // avatar,
+      avatar,
       password,
     });
 
@@ -132,7 +116,7 @@ const loginUser = catchAsyncErrors(async (req, res, next) => {
       );
     }
 
-    // sendToken(user, 201, res);
+    sendToken(user, 201, res);
     res.status(200).send({message: 'Login successful.'})
   } catch (error) {
     return next(new ErrorHandler(error.message, 500));
