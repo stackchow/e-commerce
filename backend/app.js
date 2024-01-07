@@ -31,7 +31,7 @@ const shop = require("./routes/shopRoutes");
 const product = require("./routes/productRoutes");
 const event = require("./routes/eventRoutes");
 const coupon = require("./routes/couponCodeRoutes");
-const payment = require("./routes/paymentRoutes");
+const payment = require("./controller/payment");
 const order = require("./routes/orderRoutes");
 const conversation = require("./routes/conversationRoutes");
 const message = require("./routes/messageRoutes");
@@ -45,7 +45,7 @@ app.use("/api/v1/shop", shop);
 app.use("/api/v1/product", product);
 app.use("/api/v1/event", event);
 app.use("/api/v1/coupon", coupon);
-// app.use("/api/v1/payment", payment);
+app.use("/api/v1/payment", payment);
 app.use("/api/v1/withdraw", withdraw);
 
 // it's for ErrorHandling
