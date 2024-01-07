@@ -7,9 +7,10 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 router.post(
   "/process",
   catchAsyncErrors(async (req, res, next) => {
+    console.log("payment/process route");
     const myPayment = await stripe.paymentIntents.create({ // Paystack instead
       amount: req.body.amount,
-      currency: "inr",
+      currency: "NGN",
       metadata: {
         company: "Stackchow",
       },
