@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styles from "../../styles/styles";
-import { Country, State } from "country-state-city";
+import { State } from "country-state-city";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
@@ -11,7 +11,7 @@ import { toast } from "react-toastify";
 const Checkout = () => {
   const { user } = useSelector((state) => state.user);
   const { cart } = useSelector((state) => state.cart);
-  const [country, setCountry] = useState("");
+  const [country, setCountry] = useState("NG");
   const [city, setCity] = useState("");
   const [userInfo, setUserInfo] = useState(false);
   const [address1, setAddress1] = useState("");
@@ -100,7 +100,7 @@ const Checkout = () => {
     ? (subTotalPrice + shipping - discountPercentenge).toFixed(2)
     : (subTotalPrice + shipping).toFixed(2);
 
-  console.log(discountPercentenge);
+  // console.log(discountPercentenge);
 
   return (
     <div className="w-full flex flex-col items-center py-8">
@@ -214,16 +214,17 @@ const ShippingInfo = ({
               className="w-[95%] border h-[40px] rounded-[5px]"
               value={country}
               onChange={(e) => setCountry(e.target.value)}
+              disabled
             >
-              <option className="block pb-2" value="">
-                Choose your country
+              <option className="block pb-2" value="NG">
+                Nigeria
               </option>
-              {Country &&
+              {/* { {Country &&
                 Country.getAllCountries().map((item) => (
                   <option key={item.isoCode} value={item.isoCode}>
                     {item.name}
                   </option>
-                ))}
+                ))}  */}
             </select>
           </div>
           <div className="w-[50%]">
@@ -237,7 +238,7 @@ const ShippingInfo = ({
                 Choose your City
               </option>
               {State &&
-                State.getStatesOfCountry(country).map((item) => (
+                State.getStatesOfCountry("NG").map((item) => (
                   <option key={item.isoCode} value={item.isoCode}>
                     {item.name}
                   </option>
@@ -263,7 +264,6 @@ const ShippingInfo = ({
               type="address"
               value={address2}
               onChange={(e) => setAddress2(e.target.value)}
-              required
               className={`${styles.input}`}
             />
           </div>
@@ -339,7 +339,6 @@ const CartData = ({
           placeholder="Coupoun code"
           value={couponCode}
           onChange={(e) => setCouponCode(e.target.value)}
-          required
         />
         <input
           className={`w-full h-[40px] border border-[#f63b60] text-center text-[#f63b60] rounded-[3px] mt-8 cursor-pointer`}
