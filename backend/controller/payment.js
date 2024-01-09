@@ -9,7 +9,7 @@ const paystack = require("paystack")(process.env.PAYSTACK_SECRET_KEY);
 router.post(
   "/process",
   catchAsyncErrors(async (req, res, next) => {
-    const myPayment = await paystack.transaction.initialize({ // Paystack instead
+    const myPayment = await paystack.transaction.initialize({ // Initiate payment
       email: req.body.email,
       amount: req.body.amount,
       currency: "NGN",
@@ -25,12 +25,13 @@ router.post(
   })
 );
 
+// Verify payments
+
 router.get(
   "/paystackPk",
   catchAsyncErrors(async (req, res, next) => {
     res.status(200).json({ paystackPk: process.env.PAYSTACK_API_KEY });
   })
 );
-
 
 module.exports = router;
