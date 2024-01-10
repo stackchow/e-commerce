@@ -9,7 +9,6 @@ import {
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
-// import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { server } from "../../server";
@@ -31,9 +30,15 @@ const Payment = () => {
 
   const onNewPaymentMethod = async () => {
     try {
+      orderData.paymentInfo = {
+        type: "Pay with paystack",
+      };
+
       const response = await axios.post(`${server}/payment/process`, {
-        email: "aplusakorede@gmail.com",
-        amount: 1000000,
+        // Grab details from order
+        email: orderData.user.email,
+        amount: orderData.totalPrice,
+        paymentInfo: orderData.paymentInfo
       });
 
       // Call Verify payment endpoint:
