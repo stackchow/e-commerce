@@ -2,52 +2,28 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../../styles/styles";
 import { useEffect } from "react";
-import {
-  CardNumberElement,
-  CardCvcElement,
-  CardExpiryElement,
-  useStripe,
-  useElements,
-} from "@stripe/react-stripe-js";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { server } from "../../server";
 import { toast } from "react-toastify";
-import { RxCross1 } from "react-icons/rx";
 
 const Payment = () => {
   const [orderData, setOrderData] = useState([]);
   const [open, setOpen] = useState(false);
   const { user } = useSelector((state) => state.user);
   const navigate = useNavigate();
-  const stripe = useStripe();
-  const elements = useElements();
 
   useEffect(() => {
     const orderData = JSON.parse(localStorage.getItem("latestOrder"));
     setOrderData(orderData);
   }, []);
 
-  const onNewPaymentMethod = async () => {
+  const paymentHandler = async () => {
     try {
-      orderData.paymentInfo = {
-        type: "Pay with paystack",
-      };
-
       const response = await axios.post(`${server}/payment/process`, {
-        // Grab details from order
         email: orderData.user.email,
-        amount: orderData.totalPrice,
-        paymentInfo: orderData.paymentInfo
+        amount: orderData.totalPrice
       });
-
-      // Call Verify payment endpoint:
-        // setOpen(false);
-        // navigate("/order/success");
-        // toast.success("Order successful!");
-        // localStorage.setItem("cartItems", JSON.stringify([]));
-        // localStorage.setItem("latestOrder", JSON.stringify([]));
-        // window.location.reload()
 
       const authorizationUrl = response.data.data.authorization_url;
       window.open(authorizationUrl, "", "popup");
@@ -56,89 +32,15 @@ const Payment = () => {
     }
   };
 
-  const createOrder = (data, actions) => {
-    return actions.order
-      .create({
-        purchase_units: [
-          {
-            description: "Sunflower",
-            amount: {
-              currency_code: "USD",
-              value: orderData?.totalPrice,
-            },
-          },
-        ],
-        // not needed if a shipping address is actually needed
-        application_context: {
-          shipping_preference: "NO_SHIPPING",
-        },
-      })
-      .then((orderID) => {
-        return orderID;
-      });
-  };
-
   const order = {
     cart: orderData?.cart,
     shippingAddress: orderData?.shippingAddress,
     user: user && user,
     totalPrice: orderData?.totalPrice,
   };
-
   const paymentData = {
     amount: Math.round(orderData?.totalPrice * 100),
   };
-
-  // const paymentHandler = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const config = {
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //     };
-
-  //     const { data } = await axios.post(
-  //       `${server}/payment/process`,
-  //       paymentData,
-  //       config
-  //     );
-
-  //     const client_secret = data.client_secret;
-
-  //     if (!stripe || !elements) return;
-  //     const result = await stripe.confirmCardPayment(client_secret, {
-  //       payment_method: {
-  //         card: elements.getElement(CardNumberElement),
-  //       },
-  //     });
-
-  //     if (result.error) {
-  //       toast.error(result.error.message);
-  //     } else {
-  //       if (result.paymentIntent.status === "succeeded") {
-  //         order.paymnentInfo = {
-  //           id: result.paymentIntent.id,
-  //           status: result.paymentIntent.status,
-  //           type: "Credit Card",
-  //         };
-
-  //         await axios
-  //           .post(`${server}/order/create-order`, order, config)
-  //           .then((res) => {
-  //             setOpen(false);
-  //             navigate("/order/success");
-  //             toast.success("Order successful!");
-  //             localStorage.setItem("cartItems", JSON.stringify([]));
-  //             localStorage.setItem("latestOrder", JSON.stringify([]));
-  //             window.location.reload();
-  //           });
-  //       }
-  //     }
-  //   } catch (error) {
-  //     toast.error(error);
-  //   }
-  // };
 
   const cashOnDeliveryHandler = async (e) => {
     e.preventDefault();
@@ -171,12 +73,7 @@ const Payment = () => {
       <div className="w-[90%] 1000px:w-[70%] block 800px:flex">
         <div className="w-full 800px:w-[65%]">
           <PaymentInfo
-            user={user}
-            open={open}
-            setOpen={setOpen}
-            onNewPaymentMethod={onNewPaymentMethod}
-            createOrder={createOrder}
-            // paymentHandler={paymentHandler}
+            paymentHandler={paymentHandler}
             cashOnDeliveryHandler={cashOnDeliveryHandler}
           />
         </div>
@@ -189,21 +86,13 @@ const Payment = () => {
 };
 
 const PaymentInfo = ({
-  user,
-  open,
-  setOpen,
-  onNewPaymentMethod,
-  authorizationUrl,
-  setAuthorizationUrl,
-  createOrder,
-  // paymentHandler,
+  paymentHandler,
   cashOnDeliveryHandler,
 }) => {
   const [select, setSelect] = useState(1);
 
   return (
     <div className="w-full 800px:w-[95%] bg-[#fff] rounded-md p-5 pb-8">
-      
 
       <br />
       {/* paystack payment */}
@@ -222,14 +111,12 @@ const PaymentInfo = ({
           </h4>
         </div>
 
-        {/* pay with payement */}
         {select === 1 ? (
           <div className="w-full flex border-b">
             <div
               className={`${styles.button} !bg-[#f63b60] text-white h-[45px] rounded-[5px] cursor-pointer text-[18px] font-[600]`}
               onClick={() => {
-                // setOpen(true);
-                onNewPaymentMethod();
+                paymentHandler();
               }}
             >
               Pay Now
@@ -278,22 +165,22 @@ const CartData = ({ orderData }) => {
     <div className="w-full bg-[#fff] rounded-md p-5 pb-8">
       <div className="flex justify-between">
         <h3 className="text-[16px] font-[400] text-[#000000a4]">subtotal:</h3>
-        <h5 className="text-[18px] font-[600]">${orderData?.subTotalPrice}</h5>
+        <h5 className="text-[18px] font-[600]">₦{orderData?.subTotalPrice}</h5>
       </div>
       <br />
       <div className="flex justify-between">
         <h3 className="text-[16px] font-[400] text-[#000000a4]">shipping:</h3>
-        <h5 className="text-[18px] font-[600]">${shipping}</h5>
+        <h5 className="text-[18px] font-[600]">₦{shipping}</h5>
       </div>
       <br />
       <div className="flex justify-between border-b pb-3">
         <h3 className="text-[16px] font-[400] text-[#000000a4]">Discount:</h3>
         <h5 className="text-[18px] font-[600]">
-          {orderData?.discountPrice ? "$" + orderData.discountPrice : "-"}
+          {orderData?.discountPrice ? "₦" + orderData.discountPrice : "-"}
         </h5>
       </div>
       <h5 className="text-[18px] font-[600] text-end pt-3">
-        ${orderData?.totalPrice}
+        ₦{orderData?.totalPrice}
       </h5>
       <br />
     </div>
