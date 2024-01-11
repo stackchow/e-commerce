@@ -10,7 +10,7 @@ const paystack = require("paystack")(process.env.PAYSTACK_SECRET_KEY);
 router.post(
   "/process",
   catchAsyncErrors(async (req, res, next) => {
-    const {email, amount, paymentInfo} = req.body;
+    const {email, amount} = req.body;
 
     const initPayment = await paystack.transaction.initialize({ // Initiate payment
       email, 
@@ -21,9 +21,15 @@ router.post(
       },
     });
 
+    const paymentInfo = {
+      type: "Pay with paystack",
+      paystack_ref: initPayment.data.reference
+    };
+
     res.status(200).json({
       data: initPayment.data,
-      status: initPayment.status
+      status: initPayment.status,
+      paymentInfo,
     });
     next();
   })
@@ -31,21 +37,23 @@ router.post(
 
 // Verify payments
 
-router.get('/verify-payment', (req, res) => {
-  const verifyTrans = catchAsyncErrors(async (req, res) => {
-    const response = await paystack.transaction.verify({
-      reference: user.paystack_ref
-    });
-    return response
-  });
+router.get('/verify-payment/:id',
+  // catchAsyncErrors()
+  async (req, res) => {
+    try {
+      
+      const ref = req.params.id;
+      const response = await paystack.transaction.verify({
+        reference: ref
+      });
 
-})
-
-router.get(
-  "/paystackPk",
-  catchAsyncErrors(async (req, res, next) => {
-    res.status(200).json({ paystackPk: process.env.PAYSTACK_API_KEY });
-  })
+      res.status(200).json({
+        response,
+      })
+    } catch (error) {
+      res.status(500).send(error)
+    }
+  }
 );
 
 module.exports = router;
