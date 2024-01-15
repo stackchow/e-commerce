@@ -21,8 +21,8 @@ const Payment = () => {
   const paymentHandler = async () => {
     try {
       const response = await axios.post(`${server}/payment/process`, {
-        email: orderData.user.email,
-        amount: orderData.totalPrice
+        email: orderData?.user.email,
+        amount: orderData?.totalPrice
       });
 
       const authorizationUrl = response.data.data.authorization_url;
