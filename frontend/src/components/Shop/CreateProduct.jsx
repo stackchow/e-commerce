@@ -13,6 +13,7 @@ const CreateProduct = () => {
   const dispatch = useDispatch();
 
   const [images, setImages] = useState([]);
+  const [video, setVideo] = useState("");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
@@ -35,6 +36,7 @@ const CreateProduct = () => {
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
 
+    console.log(files);
     setImages([]);
 
     files.forEach((file) => {
@@ -49,6 +51,22 @@ const CreateProduct = () => {
     });
   };
 
+  const handleVideoChange = (e) => {
+    const file = e.target.files[0];
+    setVideo(""); // Clearing previous video
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      if (reader.readyState === 2) {
+        setVideo(reader.result);
+      }
+    };
+
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -57,6 +75,8 @@ const CreateProduct = () => {
     images.forEach((image) => {
       newForm.set("images", image);
     });
+
+    video && newForm.append("video", video);
     newForm.append("name", name);
     newForm.append("description", description);
     newForm.append("category", category);
@@ -76,6 +96,7 @@ const CreateProduct = () => {
         stock,
         shopId: seller._id,
         images,
+        video,
       })
     );
   };
@@ -214,14 +235,43 @@ const CreateProduct = () => {
                 />
               ))}
           </div>
-          <br />
-          <div>
-            <input
-              type="submit"
-              value="Create"
-              className="mt-2 cursor-pointer appearance-none text-center block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            />
+        </div>
+        <div>
+          <label className="pb-2">
+            Upload Video <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="file"
+            name=""
+            id="upload1"
+            className="hidden"
+            multiple
+            onChange={handleVideoChange}
+          />
+          <div className="w-full flex items-center flex-wrap">
+            <label htmlFor="upload1">
+              <AiOutlinePlusCircle size={30} className="mt-3" color="#555" />
+            </label>
+            {video && (
+              <video
+                width="320"
+                height="240"
+                controls
+                className="h-[210px] w-[280px] object-cover m-3"
+              >
+                <source src={video} />
+                Your browser does not support the video tag.
+              </video>
+            )}
           </div>
+        </div>
+        <br />
+        <div>
+          <input
+            type="submit"
+            value="Create"
+            className="mt-2 cursor-pointer appearance-none text-center block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+          />
         </div>
       </form>
     </div>

@@ -2,7 +2,7 @@ const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const Product = require("../model/product");
 const Order = require("../model/order");
 const Shop = require("../model/shop");
-const cloudinary = require("cloudinary");
+const cloudinary = require("cloudinary").v2;
 const ErrorHandler = require("../utils/ErrorHandler");
 
 // create product
@@ -14,28 +14,47 @@ const createProduct = catchAsyncErrors(async (req, res, next) => {
       return next(new ErrorHandler("Shop Id is invalid!", 400));
     } else {
       let images = [];
+      let video;
 
       if (typeof req.body.images === "string") {
         images.push(req.body.images);
       } else {
         images = req.body.images;
       }
-    
+
+      if (typeof req.body.video === "string") {
+        video = req.body.video;
+      } else {
+        return;
+      }
+
       const imagesLinks = [];
-    
+      let videoLink;
+
       for (let i = 0; i < images.length; i++) {
-        const result = await cloudinary.v2.uploader.upload(images[i], {
+        const result = await cloudinary.uploader.upload(images[i], {
           folder: "products",
         });
-    
+
         imagesLinks.push({
           public_id: result.public_id,
           url: result.secure_url,
         });
       }
-    
+
+      const resultVid = await cloudinary.uploader.upload(video, {
+        resource_type: "video",
+        folder: "products/videos",
+      });
+
+      videoLink = {
+        public_id: resultVid.public_id,
+        url: resultVid.secure_url,
+      };
+
       const productData = req.body;
       productData.images = imagesLinks;
+      productData.video = videoLink;
       productData.shop = shop;
 
       const product = await Product.create(productData);
@@ -46,9 +65,10 @@ const createProduct = catchAsyncErrors(async (req, res, next) => {
       });
     }
   } catch (error) {
+    console.log(error);
     return next(new ErrorHandler(error, 400));
   }
-})
+});
 
 // get all products of a shop
 const getAllProductsByShop = catchAsyncErrors(async (req, res, next) => {
@@ -62,24 +82,25 @@ const getAllProductsByShop = catchAsyncErrors(async (req, res, next) => {
   } catch (error) {
     return next(new ErrorHandler(error, 400));
   }
-})
+});
 
 // delete product of a shop
 const delShopProductById = catchAsyncErrors(async (req, res, next) => {
   try {
-    const product = await Product.findById(req.params.id);
+    const productId = req.params.id
+    const product = await Product.findById(productId);
 
     if (!product) {
       return next(new ErrorHandler("Product is not found with this id", 404));
-    }    
+    }
 
-    for (let i = 0; 1 < product.images.length; i++) {
-      const result = await cloudinary.v2.uploader.destroy(
+    for (let i = 0; i < product.images.length; i++) {
+      const result = await cloudinary.uploader.destroy(
         product.images[i].public_id
       );
     }
-  
-    await product.remove();
+
+    await Product.findByIdAndDelete(productId);
 
     res.status(201).json({
       success: true,
@@ -88,7 +109,7 @@ const delShopProductById = catchAsyncErrors(async (req, res, next) => {
   } catch (error) {
     return next(new ErrorHandler(error, 400));
   }
-})
+});
 
 // get all products
 const getAllProducts = catchAsyncErrors(async (req, res, next) => {
@@ -178,5 +199,5 @@ module.exports = {
   delShopProductById,
   getAllProducts,
   createNewReview,
-  adminGetAllProducts
+  adminGetAllProducts,
 };
