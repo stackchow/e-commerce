@@ -12,7 +12,8 @@ export const createProduct =
     discountPrice,
     stock,
     shopId,
-    images
+    images,
+    video,
   ) =>
   async (dispatch) => {
     try {
@@ -31,6 +32,7 @@ export const createProduct =
         stock,
         shopId,
         images,
+        video,
       );
       dispatch({
         type: "productCreateSuccess",
