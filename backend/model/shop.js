@@ -31,6 +31,7 @@ const shopSchema = new mongoose.Schema({
   phoneNumber: {
     type: Number,
     required: true,
+    maxLength: [15, "Phone number should be less than 15 characters!"],
   },
   role: {
     type: String,
