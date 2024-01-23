@@ -19,7 +19,6 @@ const createShop = catchAsyncErrors(async (req, res, next) => {
       folder: "avatars",
     });
 
-
     const seller = {
       name: req.body.name,
       email: email,
@@ -28,6 +27,7 @@ const createShop = catchAsyncErrors(async (req, res, next) => {
         public_id: myCloud.public_id,
         url: myCloud.secure_url,
       },
+      university: req.body.university,
       address: req.body.address,
       phoneNumber: req.body.phoneNumber,
       zipCode: req.body.zipCode,
@@ -75,7 +75,7 @@ const activateUser = catchAsyncErrors(async (req, res, next) => {
     if (!newSeller) {
       return next(new ErrorHandler("Invalid token", 400));
     }
-    const { name, email, password, avatar, zipCode, address, phoneNumber } =
+    const { name, email, password, avatar, zipCode, university, address, phoneNumber } =
       newSeller;
 
     let seller = await Shop.findOne({ email });
@@ -90,6 +90,7 @@ const activateUser = catchAsyncErrors(async (req, res, next) => {
       avatar,
       password,
       zipCode,
+      university,
       address,
       phoneNumber,
     });

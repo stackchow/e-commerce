@@ -1,7 +1,7 @@
 import { React, useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import styles from "../../styles/styles";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import { server } from "../../server";
 import { toast } from "react-toastify";
@@ -11,6 +11,7 @@ const ShopCreate = () => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState();
+  const [university, setUniversity] = useState("");
   const [address, setAddress] = useState("");
   const [zipCode, setZipCode] = useState();
   const [avatar, setAvatar] = useState();
@@ -27,6 +28,7 @@ const ShopCreate = () => {
         password,
         avatar,
         zipCode,
+        university,
         address,
         phoneNumber,
       })
@@ -38,10 +40,12 @@ const ShopCreate = () => {
         setAvatar();
         setZipCode();
         setAddress("");
+        setUniversity("");
         setPhoneNumber();
       })
       .catch((error) => {
-        toast.error(error.response.data.message);
+        // toast.error(error.response.data.message);
+        console.log(error);
       });
   };
 
@@ -122,6 +126,30 @@ const ShopCreate = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 />
+              </div>
+            </div>
+
+            <div>
+              <label
+                htmlFor="dropdown"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Choose University
+              </label>
+              <div className="mt-1 relative">
+                <select
+                  name="university"
+                  value={university}
+                  onChange={(e) => setUniversity(e.target.value)}
+                  required
+                  className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                >
+                  <option value="option1">Select university</option>
+                  <option value="option2">LASU</option>
+                  <option value="option3">Babcock</option>
+                  <option value="option4">Bells</option>
+                  <option value="option5">UNILAG</option>
+                </select>
               </div>
             </div>
 
