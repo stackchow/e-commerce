@@ -1,15 +1,31 @@
 import React from "react";
-import { AiOutlineFolderAdd, AiOutlineGift } from "react-icons/ai";
+import { AiOutlineFolderAdd, AiOutlineLogin, AiOutlineGift } from "react-icons/ai";
 import { FiPackage, FiShoppingBag } from "react-icons/fi";
 import { MdOutlineLocalOffer } from "react-icons/md";
 import { RxDashboard } from "react-icons/rx";
 import { VscNewFile } from "react-icons/vsc";
 import { CiMoneyBill, CiSettings } from "react-icons/ci";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BiMessageSquareDetail } from "react-icons/bi";
 import { HiOutlineReceiptRefund } from "react-icons/hi";
+import axios from "axios";
+import { server } from "../../../server";
+import { toast } from "react-toastify";
 
 const DashboardSideBar = ({ active }) => {
+  const navigate = useNavigate();
+  const logoutHandler = () => {
+    axios
+      .get(`${server}/user/logout`, { withCredentials: true })
+      .then((res) => {
+        toast.success(res.data.message);
+        window.location.reload(true);
+        navigate("/login");
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
+      });
+  };
   return (
     <div className="w-full h-[90vh] bg-white shadow-sm overflow-y-scroll sticky top-0 left-0 z-10">
       {/* single item */}
@@ -190,6 +206,20 @@ const DashboardSideBar = ({ active }) => {
             Settings
           </h5>
         </Link>
+      </div>
+
+      <div
+        className="w-full flex items-center p-4"
+        onClick={logoutHandler}
+      >
+        <AiOutlineLogin size={20} color={active === 8 ? "red" : ""} />
+        <span
+          className={`pl-3 ${
+            active === 8 ? "text-[red]" : ""
+          } 800px:block hidden`}
+        >
+          Log out
+        </span>
       </div>
     </div>
   );
