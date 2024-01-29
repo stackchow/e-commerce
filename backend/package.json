@@ -25,7 +25,10 @@
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.0.0",
     "nodemailer": "^6.9.1",
-    "nodemon": "^2.0.20",
     "paystack": "^2.0.1"
+  },
+  "devDependencies": {
+    "@ngrok/ngrok": "^0.9.1",
+    "nodemon": "^3.0.3"
   }
 }

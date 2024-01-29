@@ -1,6 +1,7 @@
 const app = require("./app");
 const connectDB = require("./db/db");
 const cloudinary = require("cloudinary");
+const ngrok = require("@ngrok/ngrok");
 
 const PORT = process.env.PORT;
 
@@ -17,6 +18,18 @@ if (process.env.NODE_ENV !== "PRODUCTION") {
   require("dotenv").config({
     path: "config/.env",
   });
+
+  (async function () {
+    try {
+      ngrok
+        .connect({ addr: 4000, authtoken_from_env: true })
+        .then((listener) =>
+          console.log(`Ingress established at: ${listener.url()}`)
+        );
+    } catch (error) {
+      console.error("Error establishing ingress with ngrok:", error);
+    }
+  })();
 }
 
 // connect db
