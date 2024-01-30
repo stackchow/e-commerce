@@ -22,11 +22,40 @@ const Payment = () => {
     try {
       const response = await axios.post(`${server}/payment/process`, {
         email: orderData?.user.email,
-        amount: orderData?.totalPrice
+        amount: orderData?.totalPrice * 100,
       });
 
       const authorizationUrl = response.data.data.authorization_url;
       window.open(authorizationUrl, "", "popup");
+
+      /*
+      const reference = response.data.data.reference;
+      const intervalId = setInterval(async () => {
+        const verifyPayment = await axios.get(
+          `${server}/payment/verifyPayment/${reference}`
+        );
+
+        if (verifyPayment.data?.status === "success") {
+          clearInterval(intervalId); // Stop polling
+          const config = {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          };
+
+          await axios
+            .post(`${server}/order/create-order`, order, config)
+            .then((res) => {
+              setOpen(false);
+              navigate("/order/success");
+              toast.success("Order successful!");
+              localStorage.setItem("cartItems", JSON.stringify([]));
+              localStorage.setItem("latestOrder", JSON.stringify([]));
+              window.location.reload();
+            });
+        }
+      }, 5000); // Poll every 5 seconds
+      */
     } catch (error) {
       toast.error("Failed to initiate new payment method");
     }
@@ -67,7 +96,6 @@ const Payment = () => {
       });
   };
 
-
   return (
     <div className="w-full flex flex-col items-center py-8">
       <div className="w-[90%] 1000px:w-[70%] block 800px:flex">
@@ -85,15 +113,11 @@ const Payment = () => {
   );
 };
 
-const PaymentInfo = ({
-  paymentHandler,
-  cashOnDeliveryHandler,
-}) => {
+const PaymentInfo = ({ paymentHandler, cashOnDeliveryHandler }) => {
   const [select, setSelect] = useState(1);
 
   return (
     <div className="w-full 800px:w-[95%] bg-[#fff] rounded-md p-5 pb-8">
-
       <br />
       {/* paystack payment */}
       <div>
