@@ -6,10 +6,6 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
 
-require("dotenv").config({
-  path: "./.env",
-});
-
 const PORT = process.env.PORT  || 4000;
 
 app.use(cors());
