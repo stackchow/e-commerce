@@ -14,7 +14,7 @@
   "author": "stackchow",
   "license": "ISC",
   "dependencies": {
-    "frontend": "./frontend",
+    "frontend": "file:frontend",
     "pm2": "^5.3.1",
     "socket": "file:socket",
     "stackchow-ecommerce": "file:backend"
