@@ -4,7 +4,7 @@
   "description": "multi-vendor e-commerce platform",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "cd backend && npm install && cd ../frontend && yarn install && cd ../socket && npm install && npm install -g pm2",
+    "build": "cd backend && npm install && cd ../frontend && yarn install && cd ../socket && npm install",
     "start": "pm2 start ./backend/server.js && pm2 start ./socket/index.js"
   },
   "repository": {
