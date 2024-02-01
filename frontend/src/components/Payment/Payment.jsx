@@ -67,9 +67,6 @@ const Payment = () => {
     user: user && user,
     totalPrice: orderData?.totalPrice,
   };
-  const paymentData = {
-    amount: Math.round(orderData?.totalPrice * 100),
-  };
 
   const cashOnDeliveryHandler = async (e) => {
     e.preventDefault();
