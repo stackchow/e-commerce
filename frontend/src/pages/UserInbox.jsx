@@ -9,11 +9,12 @@ import { useNavigate } from "react-router-dom";
 import { AiOutlineArrowRight, AiOutlineSend } from "react-icons/ai";
 import { TfiGallery } from "react-icons/tfi";
 import styles from "../styles/styles";
-const ENDPOINT = "https://socket-ecommerce-tu68.onrender.com/";
+// const ENDPOINT = "https://socket-ecommerce-tu68.onrender.com/";
+const ENDPOINT = "http://localhost:4000";
 const socketId = socketIO(ENDPOINT, { transports: ["websocket"] });
 
 const UserInbox = () => {
-  const { user,loading } = useSelector((state) => state.user);
+  const { user, loading } = useSelector((state) => state.user);
   const [conversations, setConversations] = useState([]);
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const [currentChat, setCurrentChat] = useState();
@@ -54,7 +55,7 @@ const UserInbox = () => {
 
         setConversations(resonse.data.conversations);
       } catch (error) {
-        // console.log(error);
+        console.log(error);
       }
     };
     getConversation();
@@ -161,7 +162,6 @@ const UserInbox = () => {
   };
 
   const imageSendingHandler = async (e) => {
-
     const receiverId = currentChat.members.find(
       (member) => member !== user._id
     );
@@ -174,15 +174,12 @@ const UserInbox = () => {
 
     try {
       await axios
-        .post(
-          `${server}/message/create-new-message`,
-          {
-            images: e,
-            sender: user._id,
-            text: newMessage,
-            conversationId: currentChat._id,
-          }
-        )
+        .post(`${server}/message/create-new-message`, {
+          images: e,
+          sender: user._id,
+          text: newMessage,
+          conversationId: currentChat._id,
+        })
         .then((res) => {
           setImages();
           setMessages([...messages, res.data.message]);
@@ -263,7 +260,7 @@ const MessageList = ({
   userData,
   online,
   setActiveStatus,
-  loading
+  loading,
 }) => {
   const [active, setActive] = useState(0);
   const [user, setUser] = useState([]);
@@ -278,8 +275,9 @@ const MessageList = ({
     const userId = data.members.find((user) => user !== me);
     const getUser = async () => {
       try {
-        const res = await axios.get(`${server}/shop/get-shop-info/${userId}`);
-        setUser(res.data.shop);
+        const res = await axios.get(`${server}/shop/shop-chat-info/${userId}`);
+        console.log(res);
+        setUser(res.data?.shop);
       } catch (error) {
         console.log(error);
       }
@@ -317,7 +315,7 @@ const MessageList = ({
         <p className="text-[16px] text-[#000c]">
           {!loading && data?.lastMessageId !== userData?._id
             ? "You:"
-            : userData?.name.split(" ")[0] + ": "}{" "}
+            : userData?.name + ": "}{" "}
           {data?.lastMessage}
         </p>
       </div>
