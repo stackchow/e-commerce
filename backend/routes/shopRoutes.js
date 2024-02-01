@@ -5,6 +5,7 @@ const shopRouter = express.Router();
 
 shopRouter.get("/getSeller", isSeller, shopController.getSeller);
 shopRouter.get("/get-shop-info/:id", isSeller, shopController.getShopInfo);
+shopRouter.get("/shop-chat-info/:id", shopController.getShopInfo);
 shopRouter.get("/logout", shopController.shopLogout);
 shopRouter.get(
   "/admin-all-sellers",

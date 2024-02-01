@@ -7,6 +7,7 @@ const userRouter = express.Router();
 userRouter.get("/getuser", isAuthenticated, userController.loadUser);
 userRouter.get("/logout", isAuthenticated, userController.logoutUser);
 userRouter.get("/user-info/:id", isAuthenticated, userController.getUserById);
+userRouter.get("/user-chat-info/:id", userController.getUserById);
 userRouter.get(
   "/admin-all-users",
   isAuthenticated,
