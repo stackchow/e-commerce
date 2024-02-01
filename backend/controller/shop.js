@@ -170,7 +170,7 @@ const shopLogout = catchAsyncErrors(async (req, res, next) => {
 const getShopInfo = catchAsyncErrors(async (req, res, next) => {
   try {
     const shop = await Shop.findById(req.params.id);
-    res.status(201).json({
+    res.status(200).json({
       success: true,
       shop,
     });
