@@ -6,6 +6,8 @@ const jwt = require("jsonwebtoken");
 const sendMail = require("../utils/sendMail");
 const sendToken = require("../utils/jwtToken");
 
+const frontendUrl = "https://stackmarts.vercel.app";
+
 // create user
 const createUser = async (req, res, next) => {
   try {
@@ -32,13 +34,15 @@ const createUser = async (req, res, next) => {
 
     const activationToken = createActivationToken(user);
 
-    const activationUrl = `http://localhost:3000/activation/${activationToken}`;
+    const activationUrl = `${frontendUrl}/activation/${activationToken}`;
 
     try {
       await sendMail({
         email: user.email,
         subject: "Activate your account",
-        message: `Hello ${user.name}, please click on the link to activate your account: ${activationUrl}`,
+        // message: `Hello ${user.name}, please click on the link to activate your account: ${activationUrl}`,
+        message: `Hello ${user.name}, please click on the button below to activate your account:
+        <a href="${activationUrl}"><button>Activate Account</button></a>`,
       });
 
       res.status(201).json({
@@ -51,7 +55,7 @@ const createUser = async (req, res, next) => {
   } catch (error) {
     return next(new ErrorHandler(error.message, 400));
   }
-}
+};
 
 // create activation token
 const createActivationToken = (user) => {
@@ -65,10 +69,7 @@ const activateUser = catchAsyncErrors(async (req, res, next) => {
   try {
     const { activation_token } = req.body;
 
-    const newUser = jwt.verify(
-      activation_token,
-      process.env.ACTIVATION_SECRET
-    );
+    const newUser = jwt.verify(activation_token, process.env.ACTIVATION_SECRET);
 
     if (!newUser) {
       return next(new ErrorHandler("Invalid token", 400));
@@ -117,7 +118,7 @@ const loginUser = catchAsyncErrors(async (req, res, next) => {
     }
 
     sendToken(user, 201, res);
-    res.status(200).send({message: 'Login successful.'})
+    res.status(200).send({ message: "Login successful." });
   } catch (error) {
     return next(new ErrorHandler(error.message, 500));
   }
@@ -286,9 +287,7 @@ const updateUserPassword = catchAsyncErrors(async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id).select("+password");
 
-    const isPasswordMatched = await user.comparePassword(
-      req.body.oldPassword
-    );
+    const isPasswordMatched = await user.comparePassword(req.body.oldPassword);
 
     if (!isPasswordMatched) {
       return next(new ErrorHandler("Old password is incorrect!", 400));
@@ -347,9 +346,7 @@ const delAdminUserById = catchAsyncErrors(async (req, res, next) => {
     const user = await User.findById(req.params.id);
 
     if (!user) {
-      return next(
-        new ErrorHandler("User is not available with this id", 400)
-      );
+      return next(new ErrorHandler("User is not available with this id", 400));
     }
 
     const imageId = user.avatar.public_id;
@@ -381,5 +378,5 @@ module.exports = {
   updateUserPassword,
   getUserById,
   getAllAdminUsers,
-  delAdminUserById
+  delAdminUserById,
 };
