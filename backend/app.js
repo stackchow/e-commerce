@@ -5,10 +5,14 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
+const origin =
+  process.env.NODE_ENV !== "PRODUCTION" //Not in production
+    ? "http://localhost:3000"
+    : "https://stackmarts.vercel.app";
+
 app.use(
   cors({
-    // origin: "http://localhost:3000",
-    origin: "https://stackmarts.vercel.app",
+    origin,
     credentials: true,
   })
 );
