@@ -4,20 +4,12 @@ const app = express();
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+require("dotenv").config();
 
 const inDevelopment = process.env.NODE_ENV !== "PRODUCTION";
-
-// config
-if (inDevelopment) {
-  require("dotenv").config({
-    path: "config/.env",
-  });
-}
-
-const origin =
-  inDevelopment
-    ? "http://localhost:3000"
-    : "https://stackmarts.vercel.app";
+const origin = inDevelopment
+  ? "http://localhost:3000"
+  : "https://stackmarts.vercel.app";
 
 app.use(
   cors({

@@ -1,6 +1,7 @@
 const app = require("./app");
 const connectDB = require("./db/db");
 const cloudinary = require("cloudinary");
+require("dotenv").config();
 
 const PORT = process.env.PORT;
 
@@ -11,13 +12,6 @@ process.on("uncaughtException", (err) => {
     "Shutting down the server for handling uncaught exception"
   );
 });
-
-// config
-if (process.env.NODE_ENV !== "PRODUCTION") {
-  require("dotenv").config({
-    path: "config/.env",
-  });
-}
 
 // connect db
 connectDB();
