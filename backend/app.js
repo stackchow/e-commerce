@@ -6,10 +6,10 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 require("dotenv").config();
 
-const inDevelopment = process.env.NODE_ENV !== "PRODUCTION";
-const origin = inDevelopment
-  ? "http://localhost:3000"
-  : "https://stackmarts.vercel.app";
+const inProd = process.env.NODE_ENV === "PRODUCTION";
+const origin = inProd
+  ? "https://stackmarts.vercel.app"
+  : "http://localhost:3000";
 
 app.use(
   cors({
