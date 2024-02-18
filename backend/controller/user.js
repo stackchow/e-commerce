@@ -6,7 +6,10 @@ const jwt = require("jsonwebtoken");
 const sendMail = require("../utils/sendMail");
 const sendToken = require("../utils/jwtToken");
 
-const frontendUrl = "https://stackmarts.vercel.app";
+const frontendUrl =
+  process.env.NODE_ENV !== "PRODUCTION" //Not in production
+    ? "http://localhost:3000"
+    : "https://stackmarts.vercel.app";
 
 // create user
 const createUser = async (req, res, next) => {
@@ -115,8 +118,7 @@ const loginUser = catchAsyncErrors(async (req, res, next) => {
       );
     }
 
-    sendToken(user, 201, res);
-    res.status(200).send({ message: "Login successful." });
+    sendToken(user, 200, res);
   } catch (error) {
     return next(new ErrorHandler(error.message, 500));
   }
