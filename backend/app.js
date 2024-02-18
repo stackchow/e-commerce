@@ -5,8 +5,17 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
+const inDevelopment = process.env.NODE_ENV !== "PRODUCTION";
+
+// config
+if (inDevelopment) {
+  require("dotenv").config({
+    path: "config/.env",
+  });
+}
+
 const origin =
-  process.env.NODE_ENV !== "PRODUCTION" //Not in production
+  inDevelopment
     ? "http://localhost:3000"
     : "https://stackmarts.vercel.app";
 
@@ -22,15 +31,7 @@ app.use(cookieParser());
 app.use("/test", (req, res) => {
   res.send("Hello world!");
 });
-
 app.use(bodyParser.urlencoded({ extended: true, limit: "100mb" }));
-
-// config
-if (process.env.NODE_ENV !== "PRODUCTION") {
-  require("dotenv").config({
-    path: "config/.env",
-  });
-}
 
 // import routes
 const user = require("./routes/userRoutes");
