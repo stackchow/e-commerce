@@ -28,7 +28,10 @@ const orderSchema = new mongoose.Schema({
         status: {
             type: String,
         },
-        type:{
+        reference: {
+            type: String,
+        },
+        status: {
             type: String,
         },
     },
