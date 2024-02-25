@@ -46,6 +46,7 @@ const Checkout = () => {
         discountPrice,
         shippingAddress,
         user,
+        paymentRef: "",
       };
       localStorage.setItem("latestOrder", JSON.stringify(orderData));
       navigate("/payment");
