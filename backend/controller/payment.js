@@ -22,15 +22,9 @@ router.post(
       },
     });
 
-    const paymentInfo = {
-      type: "Pay with paystack",
-      paystack_ref: initPayment.data.reference,
-    };
-
-    res.status(200).json({
+    res.status(200).send({
       data: initPayment.data,
       status: initPayment.status,
-      paymentInfo,
     });
     next();
   })
