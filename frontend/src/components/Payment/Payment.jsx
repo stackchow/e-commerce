@@ -9,9 +9,10 @@ import { toast } from "react-toastify";
 
 const Payment = () => {
   const [orderData, setOrderData] = useState([]);
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
   const { user } = useSelector((state) => state.user);
   const navigate = useNavigate();
+  let paymentRef;
 
   useEffect(() => {
     const orderData = JSON.parse(localStorage.getItem("latestOrder"));
@@ -25,37 +26,14 @@ const Payment = () => {
         amount: orderData?.totalPrice * 100,
       });
 
-      const authorizationUrl = response.data.data.authorization_url;
-      window.open(authorizationUrl, "", "popup");
+      paymentRef = response?.data?.data?.reference;
 
-      /*
-      const reference = response.data.data.reference;
-      const intervalId = setInterval(async () => {
-        const verifyPayment = await axios.get(
-          `${server}/payment/verifyPayment/${reference}`
-        );
+      const updatedOrderData = { ...orderData, paymentRef};
+      setOrderData(updatedOrderData);
+      localStorage.setItem("latestOrder", JSON.stringify(updatedOrderData));
 
-        if (verifyPayment.data?.status === "success") {
-          clearInterval(intervalId); // Stop polling
-          const config = {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          };
-
-          await axios
-            .post(`${server}/order/create-order`, order, config)
-            .then((res) => {
-              setOpen(false);
-              navigate("/order/success");
-              toast.success("Order successful!");
-              localStorage.setItem("cartItems", JSON.stringify([]));
-              localStorage.setItem("latestOrder", JSON.stringify([]));
-              window.location.reload();
-            });
-        }
-      }, 5000); // Poll every 5 seconds
-      */
+      const authorizationUrl = response?.data?.data?.authorization_url;
+      window.location.href = authorizationUrl;
     } catch (error) {
       toast.error("Failed to initiate new payment method");
     }
@@ -84,7 +62,7 @@ const Payment = () => {
     await axios
       .post(`${server}/order/create-order`, order, config)
       .then((res) => {
-        setOpen(false);
+        // setOpen(false);
         navigate("/order/success");
         toast.success("Order successful!");
         localStorage.setItem("cartItems", JSON.stringify([]));

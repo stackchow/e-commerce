@@ -35,8 +35,6 @@ const CreateProduct = () => {
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
-
-    console.log(files);
     setImages([]);
 
     files.forEach((file) => {
