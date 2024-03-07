@@ -1,18 +1,17 @@
-// create token and saving that in cookies
 const sendToken = (res, user) => {
+  // Generate JWT token
   const token = user.getJwtToken();
 
   // Options for cookies
   const options = {
-    expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days in milliseconds
     httpOnly: true,
-    // sameSite: "none",
-    sameSite: 'strict', // Prevent CSRF attacks
-    secure: true,
-    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+    secure: true, // Send only over HTTPS
+    sameSite: "none", // Suitable for cross-origin requests
   };
 
-  res.cookie("token", token, options)
+  // Set the token in the cookie
+  res.cookie("token", token, options);
 };
 
 module.exports = sendToken;

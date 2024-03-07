@@ -89,7 +89,7 @@ const activateUser = catchAsyncErrors(async (req, res, next) => {
       password,
     });
 
-    sendToken(user, 201, res);
+    sendToken(user, res);
   } catch (error) {
     return next(new ErrorHandler(error.message, 500));
   }
@@ -119,7 +119,7 @@ const loginUser = catchAsyncErrors(async (req, res, next) => {
     }
 
     sendToken(res, user);
-    res.status(200).send({message: "Login successful."})
+    res.status(200).send({user, message: "Login successful."})
   } catch (error) {
     return next(new ErrorHandler(error.message, 500));
   }
