@@ -118,7 +118,8 @@ const loginUser = catchAsyncErrors(async (req, res, next) => {
       );
     }
 
-    sendToken(user, 200, res);
+    sendToken(res, user);
+    res.status(200).send({message: "Login successful."})
   } catch (error) {
     return next(new ErrorHandler(error.message, 500));
   }
