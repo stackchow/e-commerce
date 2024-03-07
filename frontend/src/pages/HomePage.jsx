@@ -55,7 +55,6 @@ const HomePage = () => {
         order,
         config
       );
-      console.log(res);
 
       navigate("/order/success");
       toast.success("Order successful!");
