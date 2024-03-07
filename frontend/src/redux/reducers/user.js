@@ -5,8 +5,8 @@ import { createReducer } from "@reduxjs/toolkit";
 // };
 
 const initialState = {
-  userInfo: localStorage.getItem("userInfo")
-    ? JSON.parse(localStorage.getItem("userInfo"))
+  user: localStorage.getItem("user")
+    ? JSON.parse(localStorage.getItem("user"))
     : null,
   isAuthenticated: false,
 };
@@ -17,9 +17,9 @@ export const userReducer = createReducer(initialState, {
   },
   LoadUserSuccess: (state, action) => {
     state.isAuthenticated = true;
-    state.loading = false;
     state.user = action.payload;
-    localStorage.setItem("userInfo", JSON.stringify(action.payload));
+    state.loading = false;
+    localStorage.setItem('user', JSON.stringify(action.payload));
   },
   LoadUserFail: (state, action) => {
     state.loading = false;
