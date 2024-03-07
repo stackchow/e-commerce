@@ -7,7 +7,8 @@ const sendToken = (res, user) => {
     maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days in milliseconds
     httpOnly: true,
     secure: true, // Send only over HTTPS
-    sameSite: "none", // Suitable for cross-origin requests
+    // sameSite: "none", // Suitable for cross-origin requests
+    sameSite: 'strict', // Prevent CSRF attacks
   };
 
   // Set the token in the cookie
