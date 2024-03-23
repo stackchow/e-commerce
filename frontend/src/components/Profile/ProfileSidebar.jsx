@@ -16,11 +16,16 @@ import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 
 const ProfileSidebar = ({ setActive, active }) => {
+  const token = JSON.parse(localStorage.getItem("token"));
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.user);
   const logoutHandler = () => {
     axios
-      .get(`${server}/user/logout`, { withCredentials: true })
+      .get(`${server}/user/logout`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((res) => {
         localStorage.clear();
         toast.success(res.data.message);
