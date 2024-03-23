@@ -15,7 +15,7 @@ const LoginPage = () => {
   
   return (
     <div>
-        <Login />
+      <Login />
     </div>
   )
 }
