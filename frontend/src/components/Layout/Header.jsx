@@ -31,7 +31,7 @@ const Header = ({ activeHeading }) => {
   const [openWishlist, setOpenWishlist] = useState(false);
   const [open, setOpen] = useState(false);
 
-  const isAuthenticated = JSON.parse(localStorage.getItem("user"))
+  const isAuthenticated = localStorage.getItem("user")
     ? true
     : false;
 
