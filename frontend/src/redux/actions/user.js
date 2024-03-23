@@ -1,6 +1,7 @@
 import axios from "axios";
 import { server } from "../../server";
 
+const token = JSON.parse(localStorage.getItem("token"));
 // load user
 export const loadUser = () => async (dispatch) => {
   try {
@@ -8,7 +9,9 @@ export const loadUser = () => async (dispatch) => {
       type: "LoadUserRequest",
     });
     const { data } = await axios.get(`${server}/user/getuser`, {
-      withCredentials: true,
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
     });
     dispatch({
       type: "LoadUserSuccess",
@@ -30,7 +33,9 @@ export const loadSeller = () => async (dispatch) => {
       type: "LoadSellerRequest",
     });
     const { data } = await axios.get(`${server}/shop/getSeller`, {
-      withCredentials: true,
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
     });
     dispatch({
       type: "LoadSellerSuccess",
@@ -61,10 +66,9 @@ export const updateUserInformation =
           name,
         },
         {
-          withCredentials: true,
           headers: {
-            "Access-Control-Allow-Credentials": true,
-          },
+            'Authorization': `Bearer ${token}`
+          }
         }
       );
 
@@ -99,7 +103,11 @@ export const updatUserAddress =
           zipCode,
           addressType,
         },
-        { withCredentials: true }
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        }
       );
 
       dispatch({
@@ -126,7 +134,11 @@ export const deleteUserAddress = (id) => async (dispatch) => {
 
     const { data } = await axios.delete(
       `${server}/user/delete-user-address/${id}`,
-      { withCredentials: true }
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      }
     );
 
     dispatch({
@@ -152,7 +164,9 @@ export const getAllUsers = () => async (dispatch) => {
     });
 
     const { data } = await axios.get(`${server}/user/admin-all-users`, {
-      withCredentials: true,
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
     });
 
     dispatch({
