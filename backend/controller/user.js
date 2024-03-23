@@ -118,8 +118,7 @@ const loginUser = catchAsyncErrors(async (req, res, next) => {
       );
     }
 
-    sendToken(res, user);
-    res.status(200).send({message: "Login successful."})
+    sendToken(user, 200, res);
   } catch (error) {
     return next(new ErrorHandler(error.message, 500));
   }
@@ -133,7 +132,6 @@ const loadUser = catchAsyncErrors(async (req, res, next) => {
     if (!user) {
       return next(new ErrorHandler("User doesn't exists", 400));
     }
-
     res.status(200).send({
       success: true,
       user,
