@@ -5,17 +5,20 @@ const User = require("../model/user");
 const Shop = require("../model/shop");
 
 exports.isAuthenticated = catchAsyncErrors(async (req, res, next) => {
-  const { token } = req.cookies;
+  const token = req.headers.authorization?.split(" ")[1];
 
   if (!token) {
-    return next(new ErrorHandler("Please login to continue", 401));
+    return res.status(401).send({ message: "Please login to continue" });
   }
-
-  const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-
-  req.user = await User.findById(decoded.id);
-
-  next();
+  
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    req.user = await User.findById(decoded.id);
+    next();
+  } catch (error) {
+    console.error(error);
+    return res.status(401).send({ message: "Unauthorized" });
+  }
 });
 
 exports.isSeller = catchAsyncErrors(async (req, res, next) => {
