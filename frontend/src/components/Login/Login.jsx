@@ -22,12 +22,13 @@ const Login = () => {
           email,
           password,
         },
-        { withCredentials: true }
       )
       .then((res) => {
+        localStorage.setItem("token", JSON.stringify(res?.data?.token));
+        localStorage.setItem("user", JSON.stringify(res?.data?.user));
         toast.success("Login Successful!");
         navigate("/");
-        window.location.reload(true); 
+        window.location.reload(true);
       })
       .catch((err) => {
         console.log(err)
